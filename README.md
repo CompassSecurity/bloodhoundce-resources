@@ -8,6 +8,8 @@ This repository contains some useful resources regarding BloodHound CE:
 
 ## BloodHound CE Custom Queries
 
+These queries are used in BloodHound CE to analyze your collected data.
+
 ### Direct Usage
 
 You can directly copy the [BloodHound CE Custom
@@ -73,10 +75,15 @@ The imported queries are then shown in BloodHound:
 
 ## BloodHound Operator Custom Queries
 
-First, authenticate to the BloodHound API as explained above.  Then, directly
-copy the [BloodHound Operator Custom
-Queries](custom_queries/BloodHound_Operator_Custom_Queries.md) from your
-browser into your PowerShell console.
+These queries are used in a BloodHound Operator session, to modify your
+collected data.
+
+### Usage
+
+1. Authenticate to the BloodHound API as explained above. 
+2. Directly copy the [BloodHound Operator Custom
+   Queries](custom_queries/BloodHound_Operator_Custom_Queries.md) from your
+   browser into your PowerShell console.
 
 ## Useful Links
 

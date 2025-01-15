@@ -67,6 +67,10 @@ cd scripts
 .\Import-BloodHoundCECustomQueries.ps1
 ```
 
+The imported queries are then shown in BloodHound:
+
+![Custom Queries](./custom_queries/custom_queries.png)
+
 ## BloodHound Operator Custom Queries
 
 First, authenticate to the BloodHound API as explained above. Then, just

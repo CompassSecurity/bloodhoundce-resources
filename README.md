@@ -10,9 +10,9 @@ This repository contains some useful resources regarding BloodHound CE:
 
 ### Direct Usage
 
-You can directly open the [custom
-queries](custom_queries/BloodHound_CE_Custom_Queries.md) in your browser and
-copy the queries into your BloodHound CE instance.
+You can directly copy the [BloodHound CE Custom
+Queries](custom_queries/BloodHound_CE_Custom_Queries.md) from your browser into
+your BloodHound CE instance.
 
 ### Import
 
@@ -73,10 +73,10 @@ The imported queries are then shown in BloodHound:
 
 ## BloodHound Operator Custom Queries
 
-First, authenticate to the BloodHound API as explained above. Then, just
-copy-paste the queries from the
-[BloodHound_Operator_Custom_Queries.md](custom_queries/BloodHound_Operator_Custom_Queries.md)
-file.
+First, authenticate to the BloodHound API as explained above.  Then, directly
+copy the [BloodHound Operator Custom
+Queries](custom_queries/BloodHound_Operator_Custom_Queries.md) from your
+browser into your PowerShell console.
 
 ## Useful Links
 

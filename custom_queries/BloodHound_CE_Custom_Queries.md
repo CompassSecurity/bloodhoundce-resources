@@ -1,4 +1,4 @@
-# BloodHound CE Compass Custom View Queries On-Premises
+# BloodHound CE Custom Queries
 
 ## Domain
 

@@ -266,7 +266,8 @@ LIMIT 1000
 
 ```cypher
 MATCH p = shortestPath((u:User {hasspn: true})-[:ADCSESC1|ADCSESC10a|ADCSESC10b|ADCSESC13|ADCSESC3|ADCSESC4|ADCSESC6a|ADCSESC6b|ADCSESC9a|ADCSESC9b|AddAllowedToAct|AddKeyCredentialLink|AddMember|AddSelf|AdminTo|AllExtendedRights|AllowedToAct|AllowedToDelegate|CanPSRemote|CanRDP|CoerceToTGT|Contains|DCFor|DCSync|DumpSMSAPassword|ExecuteDCOM|ForceChangePassword|GenericAll|GenericWrite|GoldenCert|GPLink|HasSession|HasSIDHistory|MemberOf|Owns|ReadGMSAPassword|ReadLAPSPassword|SQLAdmin|SyncedToEntraUser|SyncLAPSPassword|TrustedBy|WriteAccountRestrictions|WriteDacl|WriteGPLink|WriteOwner|WriteSPN*1..]->(b:Base))
-WHERE u.samaccountname <> "krbtgt"
+WHERE u <> b
+  AND u.samaccountname <> "krbtgt"
   AND "admin_tier_0" IN split(b.system_tags, " ")
 RETURN p
 LIMIT 1000

@@ -4,7 +4,7 @@ This repository contains some useful resources regarding BloodHound CE:
 
 - BloodHound CE Custom Queries [↓](#bloodhound-ce-custom-queries)
 - BloodHound Operator Custom Queries [↓](#bloodhound-operator-custom-queries)
-- Useful links [↓](#useful-links)
+- Useful Links [↓](#useful-links)
 
 ## BloodHound CE Custom Queries
 

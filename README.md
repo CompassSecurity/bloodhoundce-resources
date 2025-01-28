@@ -1,5 +1,7 @@
 # Compass Security BloodHound CE Resources
 
+![](./banner.jpg)
+
 This repository contains some useful resources regarding BloodHound CE:
 
 - BloodHound CE Custom Queries [↓](#bloodhound-ce-custom-queries)

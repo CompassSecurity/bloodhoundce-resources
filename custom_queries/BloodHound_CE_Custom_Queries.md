@@ -96,6 +96,14 @@ RETURN p
 LIMIT 1000
 ```
 
+### All Sessions of All Users
+
+```cypher
+MATCH p = (:Computer)-[:HasSession*1..]->(:User)
+RETURN p
+LIMIT 1000
+```
+
 ## Privileged Accounts
 
 ### Tier 0 Objects

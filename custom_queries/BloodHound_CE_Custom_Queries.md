@@ -566,8 +566,8 @@ LIMIT 1000
 ### LAPS Passwords Readable by Non-Admin
 
 ```cypher
-MATCH p = (u:User)-[:MemberOf*1..]->(:Group)-[:GenericAll]->(:Computer {haslaps:true})
-WHERE NOT "admin_tier_0" IN split(u.system_tags, " ") OR u.system_tags is NULL
+MATCH p = (b:Base)-[:AllExtendedRights|ReadLAPSPassword|GenericAll]->(:Computer {haslaps:true})
+WHERE NOT "admin_tier_0" IN split(b.system_tags, " ") OR b.system_tags is NULL
 RETURN p
 LIMIT 1000
 ```

@@ -561,6 +561,17 @@ RETURN p
 LIMIT 1000
 ```
 
+### Shortest Paths from WebClientService Clients to Tier 0
+
+```cypher
+MATCH p = allShortestPaths((c:Computer)-[:ADCSESC1|ADCSESC10a|ADCSESC10b|ADCSESC13|ADCSESC3|ADCSESC4|ADCSESC6a|ADCSESC6b|ADCSESC9a|ADCSESC9b|AddAllowedToAct|AddKeyCredentialLink|AddMember|AddSelf|AdminTo|AllExtendedRights|AllowedToAct|AllowedToDelegate|CanPSRemote|CanRDP|CoerceToTGT|Contains|DCFor|DCSync|DumpSMSAPassword|ExecuteDCOM|ForceChangePassword|GenericAll|GenericWrite|GoldenCert|GPLink|HasSession|HasSIDHistory|MemberOf|Owns|ReadGMSAPassword|ReadLAPSPassword|SQLAdmin|SyncedToEntraUser|SyncLAPSPassword|TrustedBy|WriteAccountRestrictions|WriteDacl|WriteGPLink|WriteOwner|WriteSPN*1..]->(b2))
+WHERE "admin_tier_0" IN split(b2.system_tags, " ")
+  AND c.webclientrunning = True
+RETURN p
+LIMIT 1000
+```
+- This query contains all traversable edges.
+
 ## DACL Abuse
 
 ### LAPS Passwords Readable by Non-Admin

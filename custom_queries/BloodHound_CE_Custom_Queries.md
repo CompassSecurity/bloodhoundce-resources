@@ -270,6 +270,22 @@ RETURN p
 LIMIT 1000
 ```
 
+### Shortest Paths from Kerberoastable Users
+
+```cypher
+MATCH p = allShortestPaths((u:User {hasspn: true})-[:Owns|GenericAll|GenericWrite|WriteOwner|WriteDacl|MemberOf|ForceChangePassword|AllExtendedRights|AddMember|HasSession|Contains|GPLink|AllowedToDelegate|TrustedBy|AllowedToAct|AdminTo|CanPSRemote|CanRDP|ExecuteDCOM|HasSIDHistory|AddSelf|DCSync|ReadLAPSPassword|ReadGMSAPassword|DumpSMSAPassword|SQLAdmin|AddAllowedToAct|WriteSPN|AddKeyCredentialLink|SyncLAPSPassword|WriteAccountRestrictions|WriteGPLink|GoldenCert|ADCSESC1|ADCSESC3|ADCSESC4|ADCSESC5|ADCSESC6a|ADCSESC6b|ADCSESC7|ADCSESC9a|ADCSESC9b|ADCSESC10a|ADCSESC10b|ADCSESC13|DCFor|SyncedToEntraUser*1..]->(b:Base))
+WHERE u <> b
+  AND u.samaccountname <> "krbtgt"
+  AND u.enabled = true
+  AND NOT COALESCE(u.gmsa, false) = true
+  AND NOT COALESCE(u.msa, false) = true
+  AND NOT "Group" IN LABELS(b)
+RETURN p 
+LIMIT 1000
+```
+
+- This query contains all traversable edges.
+
 ### Shortest Paths from Kerberoastable Users to Tier 0
 
 ```cypher
@@ -426,11 +442,11 @@ LIMIT 1000
 ### All Shortest Paths From Specific Account to Computers or Users (Adjust Query)
 
 ```cypher
-WITH "tmassie@child.testlab.local" AS username
+WITH "alice" AS samaccountname
 UNWIND ['Computer', 'User'] AS type
 MATCH p = allShortestPaths((u:User)-[:ADCSESC1|ADCSESC10a|ADCSESC10b|ADCSESC13|ADCSESC3|ADCSESC4|ADCSESC6a|ADCSESC6b|ADCSESC9a|ADCSESC9b|AddAllowedToAct|AddKeyCredentialLink|AddMember|AddSelf|AdminTo|AllExtendedRights|AllowedToAct|AllowedToDelegate|CanPSRemote|CanRDP|CoerceToTGT|Contains|DCFor|DCSync|DumpSMSAPassword|ExecuteDCOM|ForceChangePassword|GenericAll|GenericWrite|GoldenCert|GPLink|HasSession|HasSIDHistory|MemberOf|Owns|ReadGMSAPassword|ReadLAPSPassword|SQLAdmin|SyncedToEntraUser|SyncLAPSPassword|TrustedBy|WriteAccountRestrictions|WriteDacl|WriteGPLink|WriteOwner|WriteSPN*1..]->(b:Base))
 WHERE u <> b
-  AND toLower(u.userprincipalname) = toLower(username)
+  AND toLower(u.samaccountname) = toLower(samaccountname)
   AND (type IN LABELS(u))
 RETURN p
 LIMIT 1000

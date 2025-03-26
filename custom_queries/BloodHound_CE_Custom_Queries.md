@@ -270,12 +270,16 @@ RETURN p
 LIMIT 1000
 ```
 
-### Shortest Path from Kerberoastable Users to Tier 0
+### Shortest Paths from Kerberoastable Users to Tier 0
 
 ```cypher
-MATCH p = shortestPath((u:User {hasspn: true})-[:ADCSESC1|ADCSESC10a|ADCSESC10b|ADCSESC13|ADCSESC3|ADCSESC4|ADCSESC6a|ADCSESC6b|ADCSESC9a|ADCSESC9b|AddAllowedToAct|AddKeyCredentialLink|AddMember|AddSelf|AdminTo|AllExtendedRights|AllowedToAct|AllowedToDelegate|CanPSRemote|CanRDP|CoerceToTGT|Contains|DCFor|DCSync|DumpSMSAPassword|ExecuteDCOM|ForceChangePassword|GenericAll|GenericWrite|GoldenCert|GPLink|HasSession|HasSIDHistory|MemberOf|Owns|ReadGMSAPassword|ReadLAPSPassword|SQLAdmin|SyncedToEntraUser|SyncLAPSPassword|TrustedBy|WriteAccountRestrictions|WriteDacl|WriteGPLink|WriteOwner|WriteSPN*1..]->(b:Base))
+MATCH p = allShortestPaths((u:User {hasspn: true})-[:ADCSESC1|ADCSESC10a|ADCSESC10b|ADCSESC13|ADCSESC3|ADCSESC4|ADCSESC6a|ADCSESC6b|ADCSESC9a|ADCSESC9b|AddAllowedToAct|AddKeyCredentialLink|AddMember|AddSelf|AdminTo|AllExtendedRights|AllowedToAct|AllowedToDelegate|CanPSRemote|CanRDP|CoerceToTGT|Contains|DCFor|DCSync|DumpSMSAPassword|ExecuteDCOM|ForceChangePassword|GenericAll|GenericWrite|GoldenCert|GPLink|HasSession|HasSIDHistory|MemberOf|Owns|ReadGMSAPassword|ReadLAPSPassword|SQLAdmin|SyncedToEntraUser|SyncLAPSPassword|TrustedBy|WriteAccountRestrictions|WriteDacl|WriteGPLink|WriteOwner|WriteSPN*1..]->(b:Base))
 WHERE u <> b
   AND u.samaccountname <> "krbtgt"
+  AND u.enabled = true
+  AND NOT COALESCE(u.gmsa, false) = true
+  AND NOT COALESCE(u.msa, false) = true
+  AND NOT "Group" IN LABELS(b)
   AND "admin_tier_0" IN split(b.system_tags, " ")
 RETURN p
 LIMIT 1000
@@ -450,26 +454,6 @@ MATCH p = allShortestPaths((b)-[*1..]->(c:Computer))
 WHERE b <> c
   AND (b:User OR b:Computer)
   AND c.haslaps = false
-RETURN p
-LIMIT 1000
-```
-
-### Shortest Paths from Kerberoastable Users to Computers
-
-```cypher
-MATCH p = allShortestPaths((u:User {hasspn: true})-[*1..]->(:Computer))
-WHERE u.samaccountname <> "krbtgt"
-RETURN p
-LIMIT 1000
-```
-
-### Shortest Paths from Kerberoastable Users to High Value Targets
-
-```cypher
-MATCH p = allShortestPaths((u:User {hasspn: true})-[*1..]->(b))
-WHERE u <> b
-  AND b.system_tags CONTAINS "admin_tier_0"
-  AND u.samaccountname <> "krbtgt"
 RETURN p
 LIMIT 1000
 ```

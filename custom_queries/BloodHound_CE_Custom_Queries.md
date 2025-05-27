@@ -629,6 +629,18 @@ Used group SIDs:
 - `-513`: Domain Users
 - `-S-1-5-32-545`: Users
 
+### dMSA Accounts Controlled by Non-Tier 0 (BadSuccessor)
+
+```cypher
+MATCH p = (d:Computer)<-[:WriteDacl|Owns|GenericAll|GenericWrite|WriteOwner]-(n:Base)
+WHERE d.`msds-delegatedmsastate` IS NOT NULL
+  AND (NOT "admin_tier_0" IN split(n.system_tags, " ") OR n.system_tags is NULL)
+RETURN p
+LIMIT 1000
+```
+
+Remember, this requires `--collectallproperties` of SharpHound!
+
 ## GPOs
 
 ### Interesting GPOs by Keyword

@@ -91,9 +91,10 @@ collected data.
 
 ### BloodHound
 
-- BloodHound Documentation: https://support.bloodhoundenterprise.io/hc/en-us
-- BloodHound Documentation:
-  https://support.bloodhoundenterprise.io/hc/en-us/sections/16600947632923-Nodes
+- BloodHound Documentation: https://bloodhound.specterops.io/
+  - Nodes: https://bloodhound.specterops.io/resources/nodes/overview
+  - Edges: https://bloodhound.specterops.io/resources/edges/overview
+  - Release Notes: https://bloodhound.specterops.io/resources/release-notes/summary
 - BloodHound GitHub: https://github.com/SpecterOps/BloodHound
 - SharpHound GitHub: https://github.com/SpecterOps/SharpHound
 

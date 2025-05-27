@@ -23,6 +23,7 @@ foreach ($token in $markdownParsed.Tokens) {
     $name = $token.Inline.Content.ToString()
     Write-Host "[*] Found category [C-$counter] $name..." -ForegroundColor green
     New-BHQuery -Name "[C-$counter] ########## $name ##########"  -Query "MATCH (n) WHERE false RETURN n"
+    Start-Sleep -Milliseconds 100
   }
   elseif ($token.Level -eq 3){
     $counter++
@@ -35,5 +36,6 @@ foreach ($token in $markdownParsed.Tokens) {
     }
     Write-Host "[*] Importing query [C-$counter] $name..."
     New-BHQuery -Name "[C-$counter] $name"  -Query "$query"
+    Start-Sleep -Milliseconds 100
   }
 }

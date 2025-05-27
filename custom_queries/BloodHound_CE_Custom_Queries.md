@@ -273,7 +273,7 @@ LIMIT 1000
 ### Shortest Paths from Kerberoastable Users
 
 ```cypher
-MATCH p = allShortestPaths((u:User {hasspn: true})-[:Owns|GenericAll|GenericWrite|WriteOwner|WriteDacl|MemberOf|ForceChangePassword|AllExtendedRights|AddMember|HasSession|Contains|GPLink|AllowedToDelegate|TrustedBy|AllowedToAct|AdminTo|CanPSRemote|CanRDP|ExecuteDCOM|HasSIDHistory|AddSelf|DCSync|ReadLAPSPassword|ReadGMSAPassword|DumpSMSAPassword|SQLAdmin|AddAllowedToAct|WriteSPN|AddKeyCredentialLink|SyncLAPSPassword|WriteAccountRestrictions|WriteGPLink|GoldenCert|ADCSESC1|ADCSESC3|ADCSESC4|ADCSESC5|ADCSESC6a|ADCSESC6b|ADCSESC7|ADCSESC9a|ADCSESC9b|ADCSESC10a|ADCSESC10b|ADCSESC13|DCFor|SyncedToEntraUser*1..]->(b:Base))
+MATCH p = allShortestPaths((u:User {hasspn: true})-[:AbuseTGTDelegation|AllowedToDelegate|HasSIDHistory|ADCSESC1|CanPSRemote|HasSession|ADCSESC10a|CanRDP|MemberOf|ADCSESC10b|CoerceAndRelayNTLMToADCS|Owns|ADCSESC13|CoerceAndRelayNTLMToLDAP|OwnsLimitedRights|ADCSESC3|CoerceAndRelayNTLMToLDAPS|ReadGMSAPassword|ADCSESC4|CoerceAndRelayNTLMToSMB|ReadLAPSPassword|ADCSESC6a|CoerceToTGT|SameForestTrust|ADCSESC6b|Contains|SpoofSIDHistory|ADCSESC9a|DCFor|SQLAdmin|ADCSESC9b|DCSync|SyncedToEntraUser|AddAllowedToAct|DumpSMSAPassword|SyncLAPSPassword|AddKeyCredentialLink|ExecuteDCOM|WriteAccountRestrictions|AddMember|ForceChangePassword|WriteDacl|AddSelf|GPLink|WriteGPLink|AdminTo|GenericAll|WriteOwner|AllExtendedRights|GenericWrite|WriteOwnerLimitedRights|AllowedToAct|GoldenCert|WriteSPN*1..]->(b:Base))
 WHERE u <> b
   AND u.samaccountname <> "krbtgt"
   AND u.enabled = true
@@ -289,7 +289,7 @@ LIMIT 1000
 ### Shortest Paths from Kerberoastable Users to Tier 0
 
 ```cypher
-MATCH p = allShortestPaths((u:User {hasspn: true})-[:ADCSESC1|ADCSESC10a|ADCSESC10b|ADCSESC13|ADCSESC3|ADCSESC4|ADCSESC6a|ADCSESC6b|ADCSESC9a|ADCSESC9b|AddAllowedToAct|AddKeyCredentialLink|AddMember|AddSelf|AdminTo|AllExtendedRights|AllowedToAct|AllowedToDelegate|CanPSRemote|CanRDP|CoerceToTGT|Contains|DCFor|DCSync|DumpSMSAPassword|ExecuteDCOM|ForceChangePassword|GenericAll|GenericWrite|GoldenCert|GPLink|HasSession|HasSIDHistory|MemberOf|Owns|ReadGMSAPassword|ReadLAPSPassword|SQLAdmin|SyncedToEntraUser|SyncLAPSPassword|TrustedBy|WriteAccountRestrictions|WriteDacl|WriteGPLink|WriteOwner|WriteSPN*1..]->(b:Base))
+MATCH p = allShortestPaths((u:User {hasspn: true})-[:AbuseTGTDelegation|AllowedToDelegate|HasSIDHistory|ADCSESC1|CanPSRemote|HasSession|ADCSESC10a|CanRDP|MemberOf|ADCSESC10b|CoerceAndRelayNTLMToADCS|Owns|ADCSESC13|CoerceAndRelayNTLMToLDAP|OwnsLimitedRights|ADCSESC3|CoerceAndRelayNTLMToLDAPS|ReadGMSAPassword|ADCSESC4|CoerceAndRelayNTLMToSMB|ReadLAPSPassword|ADCSESC6a|CoerceToTGT|SameForestTrust|ADCSESC6b|Contains|SpoofSIDHistory|ADCSESC9a|DCFor|SQLAdmin|ADCSESC9b|DCSync|SyncedToEntraUser|AddAllowedToAct|DumpSMSAPassword|SyncLAPSPassword|AddKeyCredentialLink|ExecuteDCOM|WriteAccountRestrictions|AddMember|ForceChangePassword|WriteDacl|AddSelf|GPLink|WriteGPLink|AdminTo|GenericAll|WriteOwner|AllExtendedRights|GenericWrite|WriteOwnerLimitedRights|AllowedToAct|GoldenCert|WriteSPN*1..]->(b:Base))
 WHERE u <> b
   AND u.samaccountname <> "krbtgt"
   AND u.enabled = true
@@ -322,7 +322,7 @@ LIMIT 1000
 ### Shortest Path to Unconstrained Delegation Systems except DCs
 
 ```cypher
-MATCH p = shortestPath((b:Base)-[:ADCSESC1|ADCSESC10a|ADCSESC10b|ADCSESC13|ADCSESC3|ADCSESC4|ADCSESC6a|ADCSESC6b|ADCSESC9a|ADCSESC9b|AddAllowedToAct|AddKeyCredentialLink|AddMember|AddSelf|AdminTo|AllExtendedRights|AllowedToAct|AllowedToDelegate|CanPSRemote|CanRDP|CoerceToTGT|Contains|DCFor|DCSync|DumpSMSAPassword|ExecuteDCOM|ForceChangePassword|GenericAll|GenericWrite|GoldenCert|GPLink|HasSession|HasSIDHistory|MemberOf|Owns|ReadGMSAPassword|ReadLAPSPassword|SQLAdmin|SyncedToEntraUser|SyncLAPSPassword|TrustedBy|WriteAccountRestrictions|WriteDacl|WriteGPLink|WriteOwner|WriteSPN*1..]->(c:Computer {isdc: false, unconstraineddelegation: true}))
+MATCH p = shortestPath((b:Base)-[:AbuseTGTDelegation|AllowedToDelegate|HasSIDHistory|ADCSESC1|CanPSRemote|HasSession|ADCSESC10a|CanRDP|MemberOf|ADCSESC10b|CoerceAndRelayNTLMToADCS|Owns|ADCSESC13|CoerceAndRelayNTLMToLDAP|OwnsLimitedRights|ADCSESC3|CoerceAndRelayNTLMToLDAPS|ReadGMSAPassword|ADCSESC4|CoerceAndRelayNTLMToSMB|ReadLAPSPassword|ADCSESC6a|CoerceToTGT|SameForestTrust|ADCSESC6b|Contains|SpoofSIDHistory|ADCSESC9a|DCFor|SQLAdmin|ADCSESC9b|DCSync|SyncedToEntraUser|AddAllowedToAct|DumpSMSAPassword|SyncLAPSPassword|AddKeyCredentialLink|ExecuteDCOM|WriteAccountRestrictions|AddMember|ForceChangePassword|WriteDacl|AddSelf|GPLink|WriteGPLink|AdminTo|GenericAll|WriteOwner|AllExtendedRights|GenericWrite|WriteOwnerLimitedRights|AllowedToAct|GoldenCert|WriteSPN*1..]->(c:Computer {isdc: false, unconstraineddelegation: true}))
 WHERE b<>c
 RETURN p
 LIMIT 1000
@@ -396,7 +396,7 @@ LIMIT 1000
 ### All Shortest Paths from Owned Principals to Tier 0
 
 ```cypher
-MATCH p = allShortestPaths((u:User)-[:ADCSESC1|ADCSESC10a|ADCSESC10b|ADCSESC13|ADCSESC3|ADCSESC4|ADCSESC6a|ADCSESC6b|ADCSESC9a|ADCSESC9b|AddAllowedToAct|AddKeyCredentialLink|AddMember|AddSelf|AdminTo|AllExtendedRights|AllowedToAct|AllowedToDelegate|CanPSRemote|CanRDP|CoerceToTGT|Contains|DCFor|DCSync|DumpSMSAPassword|ExecuteDCOM|ForceChangePassword|GenericAll|GenericWrite|GoldenCert|GPLink|HasSession|HasSIDHistory|MemberOf|Owns|ReadGMSAPassword|ReadLAPSPassword|SQLAdmin|SyncedToEntraUser|SyncLAPSPassword|TrustedBy|WriteAccountRestrictions|WriteDacl|WriteGPLink|WriteOwner|WriteSPN*1..]->(b:Base))
+MATCH p = allShortestPaths((u:User)-[:AbuseTGTDelegation|AllowedToDelegate|HasSIDHistory|ADCSESC1|CanPSRemote|HasSession|ADCSESC10a|CanRDP|MemberOf|ADCSESC10b|CoerceAndRelayNTLMToADCS|Owns|ADCSESC13|CoerceAndRelayNTLMToLDAP|OwnsLimitedRights|ADCSESC3|CoerceAndRelayNTLMToLDAPS|ReadGMSAPassword|ADCSESC4|CoerceAndRelayNTLMToSMB|ReadLAPSPassword|ADCSESC6a|CoerceToTGT|SameForestTrust|ADCSESC6b|Contains|SpoofSIDHistory|ADCSESC9a|DCFor|SQLAdmin|ADCSESC9b|DCSync|SyncedToEntraUser|AddAllowedToAct|DumpSMSAPassword|SyncLAPSPassword|AddKeyCredentialLink|ExecuteDCOM|WriteAccountRestrictions|AddMember|ForceChangePassword|WriteDacl|AddSelf|GPLink|WriteGPLink|AdminTo|GenericAll|WriteOwner|AllExtendedRights|GenericWrite|WriteOwnerLimitedRights|AllowedToAct|GoldenCert|WriteSPN*1..]->(b:Base))
 WHERE "owned" IN split(u.system_tags, " ")
   AND "admin_tier_0" IN split(b.system_tags, " ")
 RETURN p
@@ -409,7 +409,7 @@ LIMIT 1000
 
 ```cypher
 UNWIND ['-S-1-5-11', '-S-1-5-32-554', '-S-1-1-0', '-513', '-S-1-5-32-545'] AS group
-MATCH p = allShortestPaths((g:Group)-[:ADCSESC1|ADCSESC10a|ADCSESC10b|ADCSESC13|ADCSESC3|ADCSESC4|ADCSESC6a|ADCSESC6b|ADCSESC9a|ADCSESC9b|AddAllowedToAct|AddKeyCredentialLink|AddMember|AddSelf|AdminTo|AllExtendedRights|AllowedToAct|AllowedToDelegate|CanPSRemote|CanRDP|CoerceToTGT|Contains|DCFor|DCSync|DumpSMSAPassword|ExecuteDCOM|ForceChangePassword|GenericAll|GenericWrite|GoldenCert|GPLink|HasSession|HasSIDHistory|MemberOf|Owns|ReadGMSAPassword|ReadLAPSPassword|SQLAdmin|SyncedToEntraUser|SyncLAPSPassword|TrustedBy|WriteAccountRestrictions|WriteDacl|WriteGPLink|WriteOwner|WriteSPN*1..]->(b:Base))
+MATCH p = allShortestPaths((g:Group)-[:AbuseTGTDelegation|AllowedToDelegate|HasSIDHistory|ADCSESC1|CanPSRemote|HasSession|ADCSESC10a|CanRDP|MemberOf|ADCSESC10b|CoerceAndRelayNTLMToADCS|Owns|ADCSESC13|CoerceAndRelayNTLMToLDAP|OwnsLimitedRights|ADCSESC3|CoerceAndRelayNTLMToLDAPS|ReadGMSAPassword|ADCSESC4|CoerceAndRelayNTLMToSMB|ReadLAPSPassword|ADCSESC6a|CoerceToTGT|SameForestTrust|ADCSESC6b|Contains|SpoofSIDHistory|ADCSESC9a|DCFor|SQLAdmin|ADCSESC9b|DCSync|SyncedToEntraUser|AddAllowedToAct|DumpSMSAPassword|SyncLAPSPassword|AddKeyCredentialLink|ExecuteDCOM|WriteAccountRestrictions|AddMember|ForceChangePassword|WriteDacl|AddSelf|GPLink|WriteGPLink|AdminTo|GenericAll|WriteOwner|AllExtendedRights|GenericWrite|WriteOwnerLimitedRights|AllowedToAct|GoldenCert|WriteSPN*1..]->(b:Base))
 WHERE g <> b
   AND g.objectid ENDS WITH group
   AND "admin_tier_0" IN split(b.system_tags, " ")
@@ -430,7 +430,7 @@ Used group SIDs:
 ### All Shortest Paths to Tier 0
 
 ```cypher
-MATCH p = allShortestPaths((b1:Base)-[:ADCSESC1|ADCSESC10a|ADCSESC10b|ADCSESC13|ADCSESC3|ADCSESC4|ADCSESC6a|ADCSESC6b|ADCSESC9a|ADCSESC9b|AddAllowedToAct|AddKeyCredentialLink|AddMember|AddSelf|AdminTo|AllExtendedRights|AllowedToAct|AllowedToDelegate|CanPSRemote|CanRDP|CoerceToTGT|Contains|DCFor|DCSync|DumpSMSAPassword|ExecuteDCOM|ForceChangePassword|GenericAll|GenericWrite|GoldenCert|GPLink|HasSession|HasSIDHistory|MemberOf|Owns|ReadGMSAPassword|ReadLAPSPassword|SQLAdmin|SyncedToEntraUser|SyncLAPSPassword|TrustedBy|WriteAccountRestrictions|WriteDacl|WriteGPLink|WriteOwner|WriteSPN*1..]->(b2:Base))
+MATCH p = allShortestPaths((b1:Base)-[:AbuseTGTDelegation|AllowedToDelegate|HasSIDHistory|ADCSESC1|CanPSRemote|HasSession|ADCSESC10a|CanRDP|MemberOf|ADCSESC10b|CoerceAndRelayNTLMToADCS|Owns|ADCSESC13|CoerceAndRelayNTLMToLDAP|OwnsLimitedRights|ADCSESC3|CoerceAndRelayNTLMToLDAPS|ReadGMSAPassword|ADCSESC4|CoerceAndRelayNTLMToSMB|ReadLAPSPassword|ADCSESC6a|CoerceToTGT|SameForestTrust|ADCSESC6b|Contains|SpoofSIDHistory|ADCSESC9a|DCFor|SQLAdmin|ADCSESC9b|DCSync|SyncedToEntraUser|AddAllowedToAct|DumpSMSAPassword|SyncLAPSPassword|AddKeyCredentialLink|ExecuteDCOM|WriteAccountRestrictions|AddMember|ForceChangePassword|WriteDacl|AddSelf|GPLink|WriteGPLink|AdminTo|GenericAll|WriteOwner|AllExtendedRights|GenericWrite|WriteOwnerLimitedRights|AllowedToAct|GoldenCert|WriteSPN*1..]->(b2:Base))
 WHERE b1 <> b2
   AND "admin_tier_0" IN split(b2.system_tags, " ")
 RETURN p
@@ -444,7 +444,7 @@ LIMIT 1000
 ```cypher
 WITH "alice" AS samaccountname
 UNWIND ['Computer', 'User'] AS type
-MATCH p = allShortestPaths((u:User)-[:ADCSESC1|ADCSESC10a|ADCSESC10b|ADCSESC13|ADCSESC3|ADCSESC4|ADCSESC6a|ADCSESC6b|ADCSESC9a|ADCSESC9b|AddAllowedToAct|AddKeyCredentialLink|AddMember|AddSelf|AdminTo|AllExtendedRights|AllowedToAct|AllowedToDelegate|CanPSRemote|CanRDP|CoerceToTGT|Contains|DCFor|DCSync|DumpSMSAPassword|ExecuteDCOM|ForceChangePassword|GenericAll|GenericWrite|GoldenCert|GPLink|HasSession|HasSIDHistory|MemberOf|Owns|ReadGMSAPassword|ReadLAPSPassword|SQLAdmin|SyncedToEntraUser|SyncLAPSPassword|TrustedBy|WriteAccountRestrictions|WriteDacl|WriteGPLink|WriteOwner|WriteSPN*1..]->(b:Base))
+MATCH p = allShortestPaths((u:User)-[:AbuseTGTDelegation|AllowedToDelegate|HasSIDHistory|ADCSESC1|CanPSRemote|HasSession|ADCSESC10a|CanRDP|MemberOf|ADCSESC10b|CoerceAndRelayNTLMToADCS|Owns|ADCSESC13|CoerceAndRelayNTLMToLDAP|OwnsLimitedRights|ADCSESC3|CoerceAndRelayNTLMToLDAPS|ReadGMSAPassword|ADCSESC4|CoerceAndRelayNTLMToSMB|ReadLAPSPassword|ADCSESC6a|CoerceToTGT|SameForestTrust|ADCSESC6b|Contains|SpoofSIDHistory|ADCSESC9a|DCFor|SQLAdmin|ADCSESC9b|DCSync|SyncedToEntraUser|AddAllowedToAct|DumpSMSAPassword|SyncLAPSPassword|AddKeyCredentialLink|ExecuteDCOM|WriteAccountRestrictions|AddMember|ForceChangePassword|WriteDacl|AddSelf|GPLink|WriteGPLink|AdminTo|GenericAll|WriteOwner|AllExtendedRights|GenericWrite|WriteOwnerLimitedRights|AllowedToAct|GoldenCert|WriteSPN*1..]->(b:Base))
 WHERE u <> b
   AND toLower(u.samaccountname) = toLower(samaccountname)
   AND (type IN LABELS(u))
@@ -458,7 +458,7 @@ LIMIT 1000
 
 ```cypher
 WITH "alice" AS samaccountname
-MATCH p = allShortestPaths((u:User)-[:ADCSESC1|ADCSESC10a|ADCSESC10b|ADCSESC13|ADCSESC3|ADCSESC4|ADCSESC6a|ADCSESC6b|ADCSESC9a|ADCSESC9b|AddAllowedToAct|AddKeyCredentialLink|AddMember|AddSelf|AdminTo|AllExtendedRights|AllowedToAct|AllowedToDelegate|CanPSRemote|CanRDP|CoerceToTGT|Contains|DCFor|DCSync|DumpSMSAPassword|ExecuteDCOM|ForceChangePassword|GenericAll|GenericWrite|GoldenCert|GPLink|HasSession|HasSIDHistory|MemberOf|Owns|ReadGMSAPassword|ReadLAPSPassword|SQLAdmin|SyncedToEntraUser|SyncLAPSPassword|TrustedBy|WriteAccountRestrictions|WriteDacl|WriteGPLink|WriteOwner|WriteSPN*1..]->(b:Base))
+MATCH p = allShortestPaths((u:User)-[:AbuseTGTDelegation|AllowedToDelegate|HasSIDHistory|ADCSESC1|CanPSRemote|HasSession|ADCSESC10a|CanRDP|MemberOf|ADCSESC10b|CoerceAndRelayNTLMToADCS|Owns|ADCSESC13|CoerceAndRelayNTLMToLDAP|OwnsLimitedRights|ADCSESC3|CoerceAndRelayNTLMToLDAPS|ReadGMSAPassword|ADCSESC4|CoerceAndRelayNTLMToSMB|ReadLAPSPassword|ADCSESC6a|CoerceToTGT|SameForestTrust|ADCSESC6b|Contains|SpoofSIDHistory|ADCSESC9a|DCFor|SQLAdmin|ADCSESC9b|DCSync|SyncedToEntraUser|AddAllowedToAct|DumpSMSAPassword|SyncLAPSPassword|AddKeyCredentialLink|ExecuteDCOM|WriteAccountRestrictions|AddMember|ForceChangePassword|WriteDacl|AddSelf|GPLink|WriteGPLink|AdminTo|GenericAll|WriteOwner|AllExtendedRights|GenericWrite|WriteOwnerLimitedRights|AllowedToAct|GoldenCert|WriteSPN*1..]->(b:Base))
 WHERE u <> b
   AND toLower(u.samaccountname) = toLower(samaccountname)
   AND "admin_tier_0" IN split(b.system_tags, " ")
@@ -564,7 +564,7 @@ LIMIT 1000
 ### Shortest Paths from WebClientService Clients to Tier 0
 
 ```cypher
-MATCH p = allShortestPaths((c:Computer)-[:ADCSESC1|ADCSESC10a|ADCSESC10b|ADCSESC13|ADCSESC3|ADCSESC4|ADCSESC6a|ADCSESC6b|ADCSESC9a|ADCSESC9b|AddAllowedToAct|AddKeyCredentialLink|AddMember|AddSelf|AdminTo|AllExtendedRights|AllowedToAct|AllowedToDelegate|CanPSRemote|CanRDP|CoerceToTGT|Contains|DCFor|DCSync|DumpSMSAPassword|ExecuteDCOM|ForceChangePassword|GenericAll|GenericWrite|GoldenCert|GPLink|HasSession|HasSIDHistory|MemberOf|Owns|ReadGMSAPassword|ReadLAPSPassword|SQLAdmin|SyncedToEntraUser|SyncLAPSPassword|TrustedBy|WriteAccountRestrictions|WriteDacl|WriteGPLink|WriteOwner|WriteSPN*1..]->(b2))
+MATCH p = allShortestPaths((c:Computer)-[:AbuseTGTDelegation|AllowedToDelegate|HasSIDHistory|ADCSESC1|CanPSRemote|HasSession|ADCSESC10a|CanRDP|MemberOf|ADCSESC10b|CoerceAndRelayNTLMToADCS|Owns|ADCSESC13|CoerceAndRelayNTLMToLDAP|OwnsLimitedRights|ADCSESC3|CoerceAndRelayNTLMToLDAPS|ReadGMSAPassword|ADCSESC4|CoerceAndRelayNTLMToSMB|ReadLAPSPassword|ADCSESC6a|CoerceToTGT|SameForestTrust|ADCSESC6b|Contains|SpoofSIDHistory|ADCSESC9a|DCFor|SQLAdmin|ADCSESC9b|DCSync|SyncedToEntraUser|AddAllowedToAct|DumpSMSAPassword|SyncLAPSPassword|AddKeyCredentialLink|ExecuteDCOM|WriteAccountRestrictions|AddMember|ForceChangePassword|WriteDacl|AddSelf|GPLink|WriteGPLink|AdminTo|GenericAll|WriteOwner|AllExtendedRights|GenericWrite|WriteOwnerLimitedRights|AllowedToAct|GoldenCert|WriteSPN*1..]->(b2))
 WHERE "admin_tier_0" IN split(b2.system_tags, " ")
   AND c.webclientrunning = True
 RETURN p

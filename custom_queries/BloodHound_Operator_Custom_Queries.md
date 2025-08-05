@@ -83,3 +83,12 @@ Inactive = last logon > 180 days.
 $TierZero = BHNodeGroup | ? name -eq 'Admin Tier Zero'
 BHPath "MATCH (uc) WHERE uc.system_tags CONTAINS 'admin_tier_0' AND ((uc:User AND uc.enabled = false) OR (uc:Computer AND ((uc.enabled = false) OR (uc.lastlogon > 0 AND uc.lastlogon < (TIMESTAMP() / 1000 - 15552000)) OR (uc.lastlogontimestamp > 0 AND uc.lastlogontimestamp < (TIMESTAMP() / 1000 - 15552000))))) RETURN uc" | Remove-BHNodeFromNodeGroup -NodeGroupID $TierZero.id -force
 ```
+
+## Azure / Entra
+
+### Set Azure Users as High Value Targets if their Synced AD User is a High Value Target
+
+```powershell
+$TierZero = BHNodeGroup | ? name -eq 'Admin Tier Zero'
+BHPath 'MATCH (a:AZUser)-[:SyncedToADUser]->(n:User) WHERE "admin_tier_0" IN split(n.system_tags, " ") RETURN a' | Add-BHNodeToNodeGroup -NodeGroupID $TierZero.id -force
+```

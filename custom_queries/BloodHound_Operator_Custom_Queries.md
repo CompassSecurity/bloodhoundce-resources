@@ -62,12 +62,6 @@ $TierZero = BHNodeGroup | ? name -eq 'Admin Tier Zero'
 BHPath "MATCH (n)-[:MemberOf*1..]->(g:Group) WHERE (n.system_tags IS NULL OR NOT 'admin_tier_0' IN split(n.system_tags, ' ')) AND g.system_tags CONTAINS 'admin_tier_0' RETURN n" | Add-BHNodeToNodeGroup -NodeGroupID $TierZero.id -force
 ```
 
-### Set Azure Users as High Value Targets if their Synced AD User is a High Value Target
-```powershell
-$TierZero = BHNodeGroup | ? name -eq 'Admin Tier Zero'
-BHPath 'MATCH (a:AZUser)-[:SyncedToADUser]->(n:User) WHERE "admin_tier_0" IN split(n.system_tags, " ") RETURN a' | Add-BHNodeToNodeGroup -NodeGroupID $TierZero.id -force
-```
-
 ### Set HasNoSMBSigning Members
 
 This creates a user Node Group called HasNoSMBSigning. Provide a file with computer names like "pc1.domain.local". One entry per line.
@@ -88,4 +82,13 @@ Inactive = last logon > 180 days.
 ```powershell
 $TierZero = BHNodeGroup | ? name -eq 'Admin Tier Zero'
 BHPath "MATCH (uc) WHERE uc.system_tags CONTAINS 'admin_tier_0' AND ((uc:User AND uc.enabled = false) OR (uc:Computer AND ((uc.enabled = false) OR (uc.lastlogon > 0 AND uc.lastlogon < (TIMESTAMP() / 1000 - 15552000)) OR (uc.lastlogontimestamp > 0 AND uc.lastlogontimestamp < (TIMESTAMP() / 1000 - 15552000))))) RETURN uc" | Remove-BHNodeFromNodeGroup -NodeGroupID $TierZero.id -force
+```
+
+## Azure / Entra
+
+### Set Azure Users as High Value Targets if their Synced AD User is a High Value Target
+
+```powershell
+$TierZero = BHNodeGroup | ? name -eq 'Admin Tier Zero'
+BHPath 'MATCH (a:AZUser)-[:SyncedToADUser]->(n:User) WHERE "admin_tier_0" IN split(n.system_tags, " ") RETURN a' | Add-BHNodeToNodeGroup -NodeGroupID $TierZero.id -force
 ```

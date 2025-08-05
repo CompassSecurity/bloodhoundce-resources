@@ -13,7 +13,7 @@ $query = ""
 $counter = 1000
 
 Write-Host "[*] Removing all queries starting with [C-..." -ForegroundColor green
-Get-BHQuery -Name "[C-*" | Remove-BHQuery -Force
+Get-BHQuery -Name "[C-*" | ForEach-Object { Start-Sleep -Milliseconds 100; $_ } | Remove-BHQuery -Force
 Write-Host
 
 Write-Host "[*] Importing queries ..." -ForegroundColor green

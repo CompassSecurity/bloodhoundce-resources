@@ -179,7 +179,7 @@ LIMIT 1000
 ### Non-Tier 0 DCSync Accounts
 
 ```cypher
-MATCH p = allShortestPaths((b:Base)-[:MemberOf|:GenericAll|:DCSync*1..]->(d:Domain))
+MATCH p = allShortestPaths((b:Base)-[:MemberOf|:GenericAll|:AllExtendedRights|:DCSync*1..]->(d:Domain))
 WHERE b <> d
   AND NOT "admin_tier_0" IN split(b.system_tags, " ") OR b.system_tags is NULL
 RETURN p

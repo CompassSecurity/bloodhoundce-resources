@@ -662,7 +662,7 @@ RETURN p
 LIMIT 1000
 ```
 
-## ADCS
+## Active Directory Certificate Services (AD CS)
 
 ### All CAs
 
@@ -683,7 +683,7 @@ LIMIT 1000
 ### All Certificate Templates
 
 ```cypher
-MATCH p = (:Domain)-[:Contains*1..]->(n:CertTemplate)
+MATCH p = (:Domain)-[:Contains*1..]->(:CertTemplate)
 RETURN p
 LIMIT 1000
 ```
@@ -691,7 +691,7 @@ LIMIT 1000
 ### All Published Templates
 
 ```cypher
-MATCH p = (ct:CertTemplate)-[:PublishedTo]->(:EnterpriseCA)
+MATCH p = (:CertTemplate)-[:PublishedTo]->(:EnterpriseCA)
 RETURN p
 LIMIT 1000
 ```

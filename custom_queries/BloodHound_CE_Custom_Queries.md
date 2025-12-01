@@ -672,6 +672,14 @@ RETURN p
 LIMIT 1000
 ```
 
+### CAs Trusted for Authentication
+
+```cypher
+MATCH p=()-[:TrustedForNTAuth|NTAuthStoreFor*..]->(:Domain)
+RETURN p
+LIMIT 1000
+```
+
 ### All Certificate Templates
 
 ```cypher

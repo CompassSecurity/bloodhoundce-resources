@@ -452,6 +452,17 @@ RETURN p
 LIMIT 1000
 ```
 
+### Shortest Paths To Specific Account (Adjust Query)
+
+```cypher
+WITH "alice" AS samaccountname
+MATCH p = allShortestPaths((b1)-[:AD_ATTACK_PATHS*1..]->(b2))
+WHERE b1 <> b2
+  AND toLower(b2.samaccountname) = toLower(samaccountname)
+RETURN p
+LIMIT 1000
+```
+
 ### Shortest Paths From Users and Computers to Domain
 
 ```cypher

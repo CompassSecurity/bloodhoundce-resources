@@ -525,30 +525,6 @@ RETURN p
 LIMIT 1000
 ```
 
-### Shortest Paths from no Signing to Domain
-
-- Requires Set HasNoSMBSigning Members
-
-```cypher
-MATCH p = allShortestPaths((c:Computer)-[*1..]->(:Domain))
-WHERE "hasnosmbsigning" IN split(c.user_tags, " ")
-RETURN p
-LIMIT 1000
-```
-
-### Shortest Paths from no Signing to High Value Targets
-
-- Requires Set HasNoSMBSigning Members
-
-```cypher
-MATCH p = allShortestPaths((c:Computer)-[*1..]->(b))
-WHERE c <> b
-  AND "hasnosmbsigning" IN split(c.user_tags, " ")
-  AND "admin_tier_0" IN split(b.system_tags, " ")
-RETURN p
-LIMIT 1000
-```
-
 ### Shortest Paths from WebClientService Clients to Tier 0
 
 ```cypher

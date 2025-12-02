@@ -106,3 +106,5 @@ collected data.
   https://posts.specterops.io/cypher-queries-in-bloodhound-enterprise-c7221a0d4bb3
 - BloodHound: Searching with Cypher:
   https://support.bloodhoundenterprise.io/hc/en-us/articles/16721164740251-Searching-with-Cypher
+- BloodHound Documentation: Supported Cypher Syntax:
+  https://bloodhound.specterops.io/analyze-data/cypher-supported

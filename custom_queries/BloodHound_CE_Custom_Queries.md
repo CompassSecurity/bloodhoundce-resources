@@ -152,17 +152,7 @@ LIMIT 1000
 ### Computer Administrators
 
 ```cypher
-MATCH p = (u)-[:AdminTo]->(:Computer)
-RETURN p
-LIMIT 1000
-```
-
-### Tier 0 Users Logins on Non-Tier 0
-
-```cypher
-MATCH p = (c:Computer)-[:HasSession*1..]->(u:User)
-WHERE "admin_tier_0" IN split(u.system_tags, " ")
-  AND (NOT "admin_tier_0" IN split(c.system_tags, " ") OR c.system_tags is NULL)
+MATCH p = ()-[:AdminTo]->(:Computer)
 RETURN p
 LIMIT 1000
 ```
@@ -246,7 +236,7 @@ LIMIT 1000
 ```cypher
 MATCH p = (:Computer)-[:MemberOf*1..]->(:Base)-[:AdminTo*1..]->(:Computer)
 RETURN p
-LIMIT 100
+LIMIT 1000
 ```
 
 ### Computers Admin to Computers (direct and indirect but with superflous group membership information)
@@ -257,25 +247,20 @@ This query also returns all computers which are in a group, which is superflous 
 MATCH p = allShortestPaths((c:Computer)-[:AdminTo|MemberOf*1..]->(b:Base))
 WHERE c <> b
 RETURN p
-LIMIT 100
+LIMIT 1000
 ```
 
 ## Kerberos
 
-### Kerberoastable Users (Accounts with SPN Set)
+### Kerberoastable Users and their Group
 
 ```cypher
-MATCH p = (:Domain)-[:Contains*1..]->(b:Base {hasspn: true})
-WHERE b.samaccountname <> "krbtgt"
-RETURN p
-LIMIT 1000
-```
-
-### Kerberoastable Users in Tier 0 Groups
-
-```cypher
-MATCH p = shortestPath((:User {hasspn: true})-[:MemberOf*1..]->(g:Group))
-WHERE "admin_tier_0" IN split(g.system_tags, " ")
+MATCH p=(u:User)-[:MemberOf*1..]->(:Group)
+WHERE u.hasspn = true
+  AND u.enabled = true
+  AND NOT u.objectid ENDS WITH '-502'
+  AND NOT COALESCE(u.gmsa, false) = true
+  AND NOT COALESCE(u.msa, false) = true
 RETURN p
 LIMIT 1000
 ```
@@ -283,28 +268,27 @@ LIMIT 1000
 ### Shortest Paths from Kerberoastable Users
 
 ```cypher
-MATCH p = allShortestPaths((u:User {hasspn: true})-[:AD_ATTACK_PATHS*1..]->(b:Base))
+MATCH p = allShortestPaths((u:User)-[:AD_ATTACK_PATHS*1..]->(b:Base))
 WHERE u <> b
-  AND u.samaccountname <> "krbtgt"
+  AND u.hasspn = true
   AND u.enabled = true
+  AND NOT u.objectid ENDS WITH '-502'
   AND NOT COALESCE(u.gmsa, false) = true
   AND NOT COALESCE(u.msa, false) = true
-  AND NOT "Group" IN LABELS(b)
-RETURN p 
+RETURN p
 LIMIT 1000
 ```
 
 ### Shortest Paths from Kerberoastable Users to Tier 0
 
 ```cypher
-MATCH p = allShortestPaths((u:User {hasspn: true})-[:AD_ATTACK_PATHS*1..]->(b:Base))
+MATCH p = allShortestPaths((u:User)-[:AD_ATTACK_PATHS*1..]->(b:Tag_Tier_Zero))
 WHERE u <> b
-  AND u.samaccountname <> "krbtgt"
+  AND u.hasspn = true
   AND u.enabled = true
+  AND NOT u.objectid ENDS WITH '-502'
   AND NOT COALESCE(u.gmsa, false) = true
   AND NOT COALESCE(u.msa, false) = true
-  AND NOT "Group" IN LABELS(b)
-  AND "admin_tier_0" IN split(b.system_tags, " ")
 RETURN p
 LIMIT 1000
 ```
@@ -476,7 +460,7 @@ LIMIT 1000
 ### Shortest Paths From Users and Computers to Domain
 
 ```cypher
-MATCH p = allShortestPaths((b)-[*1..]->(:Domain))
+MATCH p = allShortestPaths((b)-[:AD_ATTACK_PATHS*1..]->(:Domain))
 WHERE (b:User OR b:Computer)
 RETURN p
 LIMIT 1000
@@ -485,7 +469,7 @@ LIMIT 1000
 ### Shortest Paths to no LAPS
 
 ```cypher
-MATCH p = allShortestPaths((b)-[*1..]->(c:Computer))
+MATCH p = allShortestPaths((b)-[:AD_ATTACK_PATHS*1..]->(c:Computer))
 WHERE b <> c
   AND (b:User OR b:Computer)
   AND c.haslaps = false

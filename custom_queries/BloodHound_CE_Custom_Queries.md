@@ -387,7 +387,7 @@ LIMIT 1000
 
 ## Shortest Path
 
-### All Shortest Paths from Owned Principals to Tier 0
+### Shortest Paths from Owned to Tier 0
 
 ```cypher
 MATCH p = allShortestPaths((u:User)-[:AD_ATTACK_PATHS*1..]->(b:Base))
@@ -397,7 +397,7 @@ RETURN p
 LIMIT 1000
 ```
 
-### All Shortest Paths from Low Privileged Groups to Tier 0
+### Shortest Paths from Low Privileged Groups to Tier 0
 
 ```cypher
 UNWIND ['-S-1-5-11', '-S-1-5-32-554', '-S-1-1-0', '-513', '-S-1-5-32-545'] AS group
@@ -417,7 +417,7 @@ Used group SIDs:
 - `-513`: Domain Users
 - `-S-1-5-32-545`: Users
 
-### All Shortest Paths to Tier 0
+### Shortest Paths to Tier 0
 
 ```cypher
 MATCH p = allShortestPaths((b1:Base)-[:AD_ATTACK_PATHS*1..]->(b2:Base))
@@ -427,7 +427,7 @@ RETURN p
 LIMIT 1000
 ```
 
-### All Shortest Paths From Specific Account to Computers or Users (Adjust Query)
+### Shortest Paths From Specific Account to Computers or Users (Adjust Query)
 
 ```cypher
 WITH "alice" AS samaccountname
@@ -440,7 +440,7 @@ RETURN p
 LIMIT 1000
 ```
 
-### All Shortest Paths From Specific Account to Tier 0
+### Shortest Paths From Specific Account to Tier 0
 
 ```cypher
 WITH "alice" AS samaccountname
@@ -452,7 +452,7 @@ RETURN p
 LIMIT 1000
 ```
 
-### Shortest Paths to Domain (including Computers)
+### Shortest Paths From Users and Computers to Domain
 
 ```cypher
 MATCH p = allShortestPaths((b)-[*1..]->(:Domain))
@@ -511,7 +511,7 @@ RETURN p
 LIMIT 1000
 ```
 
-### Shortest Paths from Domain Users and Domain Computers (including everything)
+### Shortest Paths from Domain Users and Domain Computers
 
 ```cypher
 MATCH p = allShortestPaths((g:Group)-[*1..]->(b))
@@ -554,6 +554,7 @@ WHERE "admin_tier_0" IN split(b2.system_tags, " ")
 RETURN p
 LIMIT 1000
 ```
+
 ## DACL Abuse
 
 ### LAPS Passwords Readable by Non-Admin

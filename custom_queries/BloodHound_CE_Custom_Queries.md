@@ -171,7 +171,7 @@ LIMIT 1000
 
 ```cypher
 MATCH p = (b:Base)-[:AdminTo]->(:Computer)
-WHERE NOT "admin_tier_0" IN split(b.system_tags, " ") OR b.system_tags is NULL
+WHERE NOT b:Tag_Tier_Zero
 RETURN p
 LIMIT 1000
 ```
@@ -181,7 +181,7 @@ LIMIT 1000
 ```cypher
 MATCH p = allShortestPaths((b:Base)-[:MemberOf|:GenericAll|:AllExtendedRights|:DCSync*1..]->(d:Domain))
 WHERE b <> d
-  AND NOT "admin_tier_0" IN split(b.system_tags, " ") OR b.system_tags is NULL
+  AND NOT b:Tag_Tier_Zero
 RETURN p
 LIMIT 1000
 ```
@@ -190,7 +190,7 @@ LIMIT 1000
 
 ```cypher
 MATCH p = (b:Base)-[:AllExtendedRights|ReadLAPSPassword]->(:Computer)
-WHERE NOT "admin_tier_0" IN split(b.system_tags, " ") OR b.system_tags is NULL
+WHERE NOT b:Tag_Tier_Zero
 RETURN p
 LIMIT 1000
 ```
@@ -199,7 +199,17 @@ LIMIT 1000
 
 ```cypher
 MATCH p = (b:Base)-[:AdminTo]->(:Computer)
-WHERE NOT "admin_tier_0" IN split(b.system_tags, " ") OR b.system_tags is NULL
+WHERE NOT b:Tag_Tier_Zero
+RETURN p
+LIMIT 1000
+```
+
+### Tier 0 User Sessions on Non-Tier 0
+
+```cypher
+MATCH p = (c:Computer)-[:HasSession*1..]->(u:User)
+WHERE u:Tag_Tier_Zero
+  AND NOT c:Tag_Tier_Zero
 RETURN p
 LIMIT 1000
 ```
@@ -218,7 +228,7 @@ LIMIT 1000
 
 ```cypher
 MATCH p = (:Computer {isdc: false})-[:MemberOf*1..]->(g:Group)
-WHERE "admin_tier_0" IN split(g.system_tags, " ")
+WHERE g:Tag_Tier_Zero
 RETURN p
 LIMIT 1000
 ```
@@ -483,29 +493,28 @@ RETURN p
 LIMIT 1000
 ```
 
-### Shortest Paths from Owned Principals (including everything)
+### Shortest Paths from Owned
 
 ```cypher
-MATCH p = allShortestPaths((u:User)-[*1..]->(b))
+MATCH p = allShortestPaths((b:Tag_Owned)-[:AD_ATTACK_PATHS*1..]->(b))
 WHERE u <> b
-  AND "owned" IN split(u.system_tags, " ")
 RETURN p
 LIMIT 1000
 ```
 
-### Shortest Paths from Owned Principals to Domain
+### Shortest Paths from Owned to Domain
 
 ```cypher
-MATCH p = allShortestPaths((b)-[*1..]->(:Domain))
-WHERE "owned" IN split(b.system_tags, " ")
+MATCH p = allShortestPaths((b:Tag_Owned)-[:AD_ATTACK_PATHS*1..]->(d:Domain))
+WHERE b <> d
 RETURN p
 LIMIT 1000
 ```
 
-### Shortest Paths from Owned Principals to High Value Targets
+### Shortest Paths from Owned to Tier 0
 
 ```cypher
-MATCH p = allShortestPaths((b1)-[*1..]->(b2))
+MATCH p = allShortestPaths((b1:Tag_Owned)-[:AD_ATTACK_PATHS*1..]->(b2:Tag_Tier_Zero))
 WHERE "owned" IN split(b1.system_tags, " ")
   AND "admin_tier_0" IN split(b2.system_tags, " ")
 RETURN p

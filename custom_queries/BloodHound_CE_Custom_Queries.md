@@ -109,8 +109,7 @@ LIMIT 1000
 ### Tier 0 Objects
 
 ```cypher
-MATCH p = (:Domain)-[:Contains*1..]->(n:Base)
-WHERE "admin_tier_0" IN split(n.system_tags, " ")
+MATCH p = (:Domain)-[:Contains*1..]->(n:Tag_Tier_Zero)
 RETURN p
 LIMIT 1000
 ```
@@ -118,8 +117,7 @@ LIMIT 1000
 ### Tier 0 Users
 
 ```cypher
-MATCH p = (u:User)-[:MemberOf]->(:Base)
-WHERE "admin_tier_0" IN split(u.system_tags, " ")
+MATCH p = (u:User)-[:MemberOf]->(:Tag_Tier_Zero)
 RETURN p
 LIMIT 1000
 ```
@@ -127,8 +125,7 @@ LIMIT 1000
 ### Tier 0 Computers
 
 ```cypher
-MATCH p = (c:Computer)-[:MemberOf]->(:Base)
-WHERE "admin_tier_0" IN split(c.system_tags, " ")
+MATCH p = (c:Computer)-[:MemberOf]->(:Tag_Tier_zero)
 RETURN p
 LIMIT 1000
 ```
@@ -363,18 +360,16 @@ LIMIT 1000
 ### Owned Objects
 
 ```cypher
-MATCH p = (:Domain)-[:Contains*1..]->(b:Base)
-WHERE "owned" IN split(b.system_tags, " ")
+MATCH p = (:Domain)-[:Contains*1..]->(b:Tag_Owned)
 RETURN p
 LIMIT 1000
 ```
 
-### Owned Objects and Their Group
+### Owned Objects and Their Groups
 
 ```cypher
-MATCH p = allShortestPaths((b1:Base)-[:MemberOf]->(b2:Base))
-WHERE "owned" IN split(b1.system_tags, " ")
-  AND b1 <> b2
+MATCH p = allShortestPaths((b1:Tag_Owned)-[:MemberOf*1..]->(b2:Base))
+WHERE b1 <> b2
 RETURN p
 LIMIT 1000
 ```
@@ -384,9 +379,8 @@ LIMIT 1000
 ### Shortest Paths from Owned to Tier 0
 
 ```cypher
-MATCH p = allShortestPaths((u:User)-[:AD_ATTACK_PATHS*1..]->(b:Base))
-WHERE "owned" IN split(u.system_tags, " ")
-  AND "admin_tier_0" IN split(b.system_tags, " ")
+MATCH p = allShortestPaths((b1:Tag_Owned)-[:AD_ATTACK_PATHS*1..]->(b2:Tag_Tier_Zero))
+WHERE b1 <> b2
 RETURN p
 LIMIT 1000
 ```
@@ -395,10 +389,9 @@ LIMIT 1000
 
 ```cypher
 UNWIND ['-S-1-5-11', '-S-1-5-32-554', '-S-1-1-0', '-513', '-S-1-5-32-545'] AS group
-MATCH p = allShortestPaths((g:Group)-[:AD_ATTACK_PATHS*1..]->(b:Base))
+MATCH p = allShortestPaths((g:Group)-[:AD_ATTACK_PATHS*1..]->(b:Tag_Tier_Zero))
 WHERE g <> b
   AND g.objectid ENDS WITH group
-  AND "admin_tier_0" IN split(b.system_tags, " ")
 RETURN p
 LIMIT 1000
 ```
@@ -414,9 +407,8 @@ Used group SIDs:
 ### Shortest Paths to Tier 0
 
 ```cypher
-MATCH p = allShortestPaths((b1:Base)-[:AD_ATTACK_PATHS*1..]->(b2:Base))
+MATCH p = allShortestPaths((b1:Base)-[:AD_ATTACK_PATHS*1..]->(b2:Tag_Tier_Zero))
 WHERE b1 <> b2
-  AND "admin_tier_0" IN split(b2.system_tags, " ")
 RETURN p
 LIMIT 1000
 ```
@@ -438,10 +430,9 @@ LIMIT 1000
 
 ```cypher
 WITH "alice" AS samaccountname
-MATCH p = allShortestPaths((u:User)-[:AD_ATTACK_PATHS*1..]->(b:Base))
+MATCH p = allShortestPaths((u:User)-[:AD_ATTACK_PATHS*1..]->(b:Tag_Tier_Zero))
 WHERE u <> b
   AND toLower(u.samaccountname) = toLower(samaccountname)
-  AND "admin_tier_0" IN split(b.system_tags, " ")
 RETURN p
 LIMIT 1000
 ```
@@ -499,8 +490,6 @@ LIMIT 1000
 
 ```cypher
 MATCH p = allShortestPaths((b1:Tag_Owned)-[:AD_ATTACK_PATHS*1..]->(b2:Tag_Tier_Zero))
-WHERE "owned" IN split(b1.system_tags, " ")
-  AND "admin_tier_0" IN split(b2.system_tags, " ")
 RETURN p
 LIMIT 1000
 ```
@@ -508,9 +497,8 @@ LIMIT 1000
 ### Shortest Paths from Owned Principals to no LAPS
 
 ```cypher
-MATCH p = allShortestPaths((b)-[*1..]->(c:Computer {haslaps: false}))
+MATCH p = allShortestPaths((b:Tag_Owned)-[*1..]->(c:Computer {haslaps: false}))
 WHERE b <> c
-  AND "owned" IN split(b.system_tags, " ")
 RETURN p
 LIMIT 1000
 ```
@@ -528,9 +516,8 @@ LIMIT 1000
 ### Shortest Paths from WebClientService Clients to Tier 0
 
 ```cypher
-MATCH p = allShortestPaths((c:Computer)-[:AD_ATTACK_PATHS*1..]->(b2))
-WHERE "admin_tier_0" IN split(b2.system_tags, " ")
-  AND c.webclientrunning = True
+MATCH p = allShortestPaths((c:Computer)-[:AD_ATTACK_PATHS*1..]->(b2:Tag_Tier_Zero))
+WHERE c.webclientrunning = True
 RETURN p
 LIMIT 1000
 ```
@@ -541,7 +528,7 @@ LIMIT 1000
 
 ```cypher
 MATCH p = (b:Base)-[:AllExtendedRights|ReadLAPSPassword|GenericAll]->(:Computer {haslaps:true})
-WHERE NOT "admin_tier_0" IN split(b.system_tags, " ") OR b.system_tags is NULL
+WHERE NOT b:Tag_Tier_Zero
 RETURN p
 LIMIT 1000
 ```
@@ -549,8 +536,7 @@ LIMIT 1000
 ### LAPS Passwords Readable by Owned Principals
 
 ```cypher
-MATCH p = (u)-[:MemberOf*1..]->(:Group)-[:GenericAll]->(t:Computer {haslaps:true})
-WHERE "owned" IN split(u.system_tags, " ")
+MATCH p = (u:Tag_Owned)-[:MemberOf*1..]->(:Group)-[:GenericAll]->(t:Computer {haslaps:true})
 RETURN p
 LIMIT 1000
 ```
@@ -560,7 +546,7 @@ LIMIT 1000
 ```cypher
 MATCH p = (b)-[{isacl: true}]->(:Computer)
 WHERE (b:User OR b:Computer OR b:Group)
-  AND (NOT "admin_tier_0" IN split(b.system_tags, " ") OR b.system_tags is NULL)
+  AND NOT b:Tag_Tier_Zero
 RETURN p
 LIMIT 1000
 ```
@@ -568,8 +554,7 @@ LIMIT 1000
 ### Group Delegated Outbound Object Control from Owned Principals
 
 ```cypher
-MATCH p = (b1)-[:MemberOf*1..]->(:Group)-[{isacl: true}]->(b2)
-WHERE "owned" IN split(b1.system_tags, " ")
+MATCH p = (b1:Tag_Owned)-[:MemberOf*1..]->(:Group)-[{isacl: true}]->(b2)
 RETURN p
 LIMIT 1000
 ```
@@ -596,8 +581,8 @@ Used group SIDs:
 
 ```cypher
 MATCH p = (d:Computer)<-[:WriteDacl|Owns|GenericAll|GenericWrite|WriteOwner]-(n:Base)
-WHERE d.`msds-delegatedmsastate` IS NOT NULL
-  AND (NOT "admin_tier_0" IN split(n.system_tags, " ") OR n.system_tags is NULL)
+WHERE NOT n:Tag_Tier_Zero
+  AND d.`msds-delegatedmsastate` IS NOT NULL
 RETURN p
 LIMIT 1000
 ```
@@ -616,11 +601,11 @@ RETURN p
 LIMIT 1000
 ```
 
-### GPO Permissions of Non-Admin Principals
+### GPO Permissions of Non-Tier 0 Principals
 
 ```cypher
 MATCH p = (u:User)-[:AddMember|AddSelf|WriteSPN|AddKeyCredentialLink|AllExtendedRights|ForceChangePassword|GenericAll|GenericWrite|WriteDacl|WriteOwner|Owns]->(:GPO)
-WHERE NOT 'admin_tier_0' IN split(u.system_tags, ' ') OR u.system_tags is NULL
+WHERE NOT u:Tag_Tier_Zero
 RETURN p
 LIMIT 1000
 ```
@@ -659,11 +644,11 @@ RETURN p
 LIMIT 1000
 ```
 
-### ESC1/3/4/14 not from Tier-0
+### ESC1/3/4/14 from Non-Tier 0
 
 ```cypher
 MATCH p = (b)-[:ADCSESC1|ADCSESC3|ADCSESC4|ADCSESC13]->()
-WHERE NOT "admin_tier_0" IN split(b.system_tags, " ") OR b.system_tags is NULL
+WHERE NOT b:Tag_Tier_Zero
 RETURN p
 LIMIT 1000
 ```

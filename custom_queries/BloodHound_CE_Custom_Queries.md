@@ -96,7 +96,7 @@ RETURN p
 LIMIT 1000
 ```
 
-### All Sessions of All Users
+### All Sessions
 
 ```cypher
 MATCH p = (:Computer)-[:HasSession*1..]->(:User)
@@ -149,7 +149,7 @@ RETURN p
 LIMIT 1000
 ```
 
-### AdminTo Edges
+### Computer Administrators
 
 ```cypher
 MATCH p = (u)-[:AdminTo]->(:Computer)
@@ -167,7 +167,7 @@ RETURN p
 LIMIT 1000
 ```
 
-### Non-Tier 0 Administrators
+### Non-Tier 0 Computer Administrators
 
 ```cypher
 MATCH p = (b:Base)-[:AdminTo]->(:Computer)

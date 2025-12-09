@@ -125,7 +125,7 @@ LIMIT 1000
 ### Tier 0 Computers
 
 ```cypher
-MATCH p = (c:Computer)-[:MemberOf]->(:Tag_Tier_zero)
+MATCH p = (:Computer)-[:MemberOf]->(:Tag_Tier_Zero)
 RETURN p
 LIMIT 1000
 ```

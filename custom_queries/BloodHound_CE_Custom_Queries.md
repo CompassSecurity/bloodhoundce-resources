@@ -109,7 +109,7 @@ LIMIT 1000
 ### Tier 0 Objects
 
 ```cypher
-MATCH p = (:Domain)-[:Contains*1..]->(n:Tag_Tier_Zero)
+MATCH p = (:Domain)-[:Contains*1..]->(:Tag_Tier_Zero)
 RETURN p
 LIMIT 1000
 ```
@@ -117,7 +117,7 @@ LIMIT 1000
 ### Tier 0 Users
 
 ```cypher
-MATCH p = (u:User)-[:MemberOf]->(:Tag_Tier_Zero)
+MATCH p = (:User)-[:MemberOf]->(:Tag_Tier_Zero)
 RETURN p
 LIMIT 1000
 ```
@@ -149,7 +149,7 @@ LIMIT 1000
 ### Computer Administrators
 
 ```cypher
-MATCH p = ()-[:AdminTo]->(:Computer)
+MATCH p = (:Base)-[:AdminTo]->(:Computer)
 RETURN p
 LIMIT 1000
 ```
@@ -301,7 +301,7 @@ LIMIT 1000
 ### Unconstrained Delegation Systems
 
 ```cypher
-MATCH p = ()-[:CoerceToTGT]->(:Domain)
+MATCH p = (:Base)-[:CoerceToTGT]->(:Domain)
 RETURN p
 LIMIT 1000
 ```
@@ -310,7 +310,7 @@ LIMIT 1000
 
 ```cypher
 MATCH p = shortestPath((b:Base)-[:AD_ATTACK_PATHS*1..]->(c:Computer {isdc: false, unconstraineddelegation: true}))
-WHERE b<>c
+WHERE b <> c
 RETURN p
 LIMIT 1000
 ```
@@ -360,7 +360,7 @@ LIMIT 1000
 ### Owned Objects
 
 ```cypher
-MATCH p = (:Domain)-[:Contains*1..]->(b:Tag_Owned)
+MATCH p = (:Domain)-[:Contains*1..]->(:Tag_Owned)
 RETURN p
 LIMIT 1000
 ```
@@ -418,20 +418,20 @@ LIMIT 1000
 ```cypher
 WITH "alice" AS samaccountname
 UNWIND ['Computer', 'User'] AS type
-MATCH p = allShortestPaths((u:User)-[:AD_ATTACK_PATHS*1..]->(b:Base))
-WHERE u <> b
+MATCH p = allShortestPaths((b1:Base)-[:AD_ATTACK_PATHS*1..]->(b2:Base))
+WHERE b1 <> b2
   AND toLower(u.samaccountname) = toLower(samaccountname)
   AND (type IN LABELS(u))
 RETURN p
 LIMIT 1000
 ```
 
-### Shortest Paths From Specific Account to Tier 0
+### Shortest Paths From Specific Account to Tier 0 (Adjust Query)
 
 ```cypher
 WITH "alice" AS samaccountname
-MATCH p = allShortestPaths((u:User)-[:AD_ATTACK_PATHS*1..]->(b:Tag_Tier_Zero))
-WHERE u <> b
+MATCH p = allShortestPaths((b1:Base)-[:AD_ATTACK_PATHS*1..]->(b2:Tag_Tier_Zero))
+WHERE b1 <> b2
   AND toLower(u.samaccountname) = toLower(samaccountname)
 RETURN p
 LIMIT 1000
@@ -441,7 +441,7 @@ LIMIT 1000
 
 ```cypher
 WITH "alice" AS samaccountname
-MATCH p = allShortestPaths((b1)-[:AD_ATTACK_PATHS*1..]->(b2))
+MATCH p = allShortestPaths((b1:Base)-[:AD_ATTACK_PATHS*1..]->(b2:Base))
 WHERE b1 <> b2
   AND toLower(b2.samaccountname) = toLower(samaccountname)
 RETURN p
@@ -451,7 +451,7 @@ LIMIT 1000
 ### Shortest Paths From Users and Computers to Domain
 
 ```cypher
-MATCH p = allShortestPaths((b)-[:AD_ATTACK_PATHS*1..]->(:Domain))
+MATCH p = allShortestPaths((b:Base)-[:AD_ATTACK_PATHS*1..]->(:Domain))
 WHERE (b:User OR b:Computer)
 RETURN p
 LIMIT 1000
@@ -460,7 +460,7 @@ LIMIT 1000
 ### Shortest Paths to no LAPS
 
 ```cypher
-MATCH p = allShortestPaths((b)-[:AD_ATTACK_PATHS*1..]->(c:Computer))
+MATCH p = allShortestPaths((b:Base)-[:AD_ATTACK_PATHS*1..]->(c:Computer))
 WHERE b <> c
   AND (b:User OR b:Computer)
   AND c.haslaps = false
@@ -471,8 +471,8 @@ LIMIT 1000
 ### Shortest Paths from Owned
 
 ```cypher
-MATCH p = allShortestPaths((b:Tag_Owned)-[:AD_ATTACK_PATHS*1..]->(b))
-WHERE u <> b
+MATCH p = allShortestPaths((b1:Tag_Owned)-[:AD_ATTACK_PATHS*1..]->(b2:Base))
+WHERE b1 <> b2
 RETURN p
 LIMIT 1000
 ```
@@ -490,6 +490,7 @@ LIMIT 1000
 
 ```cypher
 MATCH p = allShortestPaths((b1:Tag_Owned)-[:AD_ATTACK_PATHS*1..]->(b2:Tag_Tier_Zero))
+WHERE b1 <> b2
 RETURN p
 LIMIT 1000
 ```
@@ -506,7 +507,7 @@ LIMIT 1000
 ### Shortest Paths from Domain Users and Domain Computers
 
 ```cypher
-MATCH p = allShortestPaths((g:Group)-[*1..]->(b))
+MATCH p = allShortestPaths((g:Group)-[*1..]->(b:Base))
 WHERE g <> b
   AND (g.objectid =~ "(?i).*S-1-5-.*-513" OR g.objectid =~ "(?i).*S-1-5-.*-515")
 RETURN p
@@ -516,8 +517,9 @@ LIMIT 1000
 ### Shortest Paths from WebClientService Clients to Tier 0
 
 ```cypher
-MATCH p = allShortestPaths((c:Computer)-[:AD_ATTACK_PATHS*1..]->(b2:Tag_Tier_Zero))
-WHERE c.webclientrunning = True
+MATCH p = allShortestPaths((c:Computer)-[:AD_ATTACK_PATHS*1..]->(b:Tag_Tier_Zero))
+WHERE c <> b
+  AND c.webclientrunning = True
 RETURN p
 LIMIT 1000
 ```
@@ -536,7 +538,7 @@ LIMIT 1000
 ### LAPS Passwords Readable by Owned Principals
 
 ```cypher
-MATCH p = (u:Tag_Owned)-[:MemberOf*1..]->(:Group)-[:GenericAll]->(t:Computer {haslaps:true})
+MATCH p = (:Tag_Owned)-[:MemberOf*1..]->(:Group)-[:GenericAll]->(:Computer {haslaps:true})
 RETURN p
 LIMIT 1000
 ```
@@ -544,7 +546,7 @@ LIMIT 1000
 ### ACLs to Computers (excluding High Value Targets)
 
 ```cypher
-MATCH p = (b)-[{isacl: true}]->(:Computer)
+MATCH p = (b:Base)-[{isacl: true}]->(:Computer)
 WHERE (b:User OR b:Computer OR b:Group)
   AND NOT b:Tag_Tier_Zero
 RETURN p
@@ -554,7 +556,7 @@ LIMIT 1000
 ### Group Delegated Outbound Object Control from Owned Principals
 
 ```cypher
-MATCH p = (b1:Tag_Owned)-[:MemberOf*1..]->(:Group)-[{isacl: true}]->(b2)
+MATCH p = (:Tag_Owned)-[:MemberOf*1..]->(:Group)-[{isacl: true}]->(:Base)
 RETURN p
 LIMIT 1000
 ```
@@ -563,7 +565,7 @@ LIMIT 1000
 
 ```cypher
 UNWIND ['-S-1-5-11', '-S-1-5-32-554', '-S-1-1-0', '-513', '-S-1-5-32-545'] AS group
-MATCH p = (g:Group)-[:MemberOf*1..]->(:Group)-[:Owns|WriteDacl|GenericAll|WriteOwner|ExecuteDCOM|GenericWrite|AllowedToDelegate|ForceChangePassword]->(b)
+MATCH p = (g:Group)-[:MemberOf*1..]->(:Group)-[:Owns|WriteDacl|GenericAll|WriteOwner|ExecuteDCOM|GenericWrite|AllowedToDelegate|ForceChangePassword]->(:Base)
 WHERE g.objectid ENDS WITH group
 RETURN p
 LIMIT 1000
@@ -580,9 +582,9 @@ Used group SIDs:
 ### dMSA Accounts Controlled by Non-Tier 0 (BadSuccessor)
 
 ```cypher
-MATCH p = (d:Computer)<-[:WriteDacl|Owns|GenericAll|GenericWrite|WriteOwner]-(n:Base)
-WHERE NOT n:Tag_Tier_Zero
-  AND d.`msds-delegatedmsastate` IS NOT NULL
+MATCH p = (c:Computer)<-[:WriteDacl|Owns|GenericAll|GenericWrite|WriteOwner]-(b:Base)
+WHERE NOT b:Tag_Tier_Zero
+  AND c.`msds-delegatedmsastate` IS NOT NULL
 RETURN p
 LIMIT 1000
 ```
@@ -623,7 +625,7 @@ LIMIT 1000
 ### CAs Trusted for Authentication
 
 ```cypher
-MATCH p=()-[:TrustedForNTAuth|NTAuthStoreFor*..]->(:Domain)
+MATCH p=(:Base)-[:TrustedForNTAuth|NTAuthStoreFor*..]->(:Domain)
 RETURN p
 LIMIT 1000
 ```
@@ -647,7 +649,7 @@ LIMIT 1000
 ### ESC1/3/4/14 from Non-Tier 0
 
 ```cypher
-MATCH p = (b)-[:ADCSESC1|ADCSESC3|ADCSESC4|ADCSESC13]->()
+MATCH p = (b:Base)-[:ADCSESC1|ADCSESC3|ADCSESC4|ADCSESC13]->(:Base)
 WHERE NOT b:Tag_Tier_Zero
 RETURN p
 LIMIT 1000

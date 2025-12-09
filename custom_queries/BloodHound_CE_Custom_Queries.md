@@ -368,8 +368,7 @@ LIMIT 1000
 ### Owned Objects and Their Groups
 
 ```cypher
-MATCH p = allShortestPaths((b1:Tag_Owned)-[:MemberOf*1..]->(b2:Base))
-WHERE b1 <> b2
+MATCH p = (:Tag_Owned)-[:MemberOf*1..]->(:Group)
 RETURN p
 LIMIT 1000
 ```

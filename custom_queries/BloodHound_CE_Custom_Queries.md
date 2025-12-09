@@ -206,7 +206,7 @@ LIMIT 1000
 ### Computer without LAPS
 
 ```cypher
-MATCH p = (:Domain)-[:Contains*1..]->(:Base {haslaps: false, isdc: false})
+MATCH p = (:Domain)-[:Contains*1..]->(:Computer {haslaps: false, isdc: false})
 RETURN p
 LIMIT 1000
 ```

@@ -15,6 +15,16 @@ param(
     [int]$Port = 8080
 )
 
+Write-Host "[*] Testiing if BloodHoundOperator module is loaded..." -ForeGroundColor Green
+
+if (Get-Module BloodHoundOperator){
+  Write-Host "[*] BloodHoundOperator module is loaded." -ForeGroundColor Green
+}
+else {
+  Write-Error "[*] BloodHoundOperator module is not loaded. Please load module first." -ForeGroundColor Red
+  exit 1
+}
+
 Write-Host "[*] Authenticate..." -ForeGroundColor Green
 $body = @{
     login_method = "secret"
@@ -29,9 +39,6 @@ $response = Invoke-RestMethod `
     -ContentType "application/json"
 
 $token = $response.data.session_token
-#$token = ($response.Content | ConvertFrom-Json).data.session_token
-
-Import-Module /opt/BloodHoundOperator/BloodHoundOperator.ps1
 
 Write-Host "[*] Logging in..." -ForeGroundColor Green
 New-BHSession -Server $Hostname -Port $Port -JWT $token

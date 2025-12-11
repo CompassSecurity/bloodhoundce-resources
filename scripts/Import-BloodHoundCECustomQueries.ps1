@@ -4,7 +4,7 @@
 # Script to import BloodHound CE Custom Queries
 #
 
-$markdownFilePath = "../custom_queries/BloodHound_CE_Custom_Queries.md"
+$markdownFilePath = "$PSScriptRoot/../custom_queries/BloodHound_CE_Custom_Queries.md"
 $markdownParsed = ConvertFrom-Markdown $markdownFilePath
 
 $category = ""

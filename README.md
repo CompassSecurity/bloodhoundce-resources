@@ -28,47 +28,41 @@ Install PowerShell on Kali:
 sudo apt -y install powershell
 ```
 
-Clone the BloodHoundOperator repository:
+You can now start a new PowerShell using `pwsh`.
+
+Clone the `BloodHoundOperator` repository:
 
 ```bash
 git clone https://github.com/SadProcessor/BloodHoundOperator.git
 ```
 
-Create a new API Key in BloodHound via Settings → My Profile → API Key
-Management → Create Token.
-
 #### Query Import
 
-Load the BloodHound Operator module, authenticate using the created API tokens
-and create a new session:
+Load the BloodHoundOperator module:
 
 ```powershell
 Import-Module /opt/BloodHoundOperator/BloodHoundOperator.ps1
-
-$BHTokenKey = "WW91ciBCbG9vZEhvdW5kIEFQSSBLZXkgY29tZXMgaGVyZSA6KQ=="
-$BHTokenID = "596F7572-2054-6F6B-656E-204944203A29"
-$BHServer = "127.0.0.1"
-$BHPort = "8080"
-
-New-BHSession -Server $BHServer -Port $BHPort -TokenID $BHTokenID -Token (ConvertTo-SecureString -AsPlainText -Force $BHTokenKey)
-Get-BHSession
 ```
 
-For your convinience, so that you don't have to type the commands above every
-time, you can copy the
-[Create-BloodHoundOperatorSession.ps1](scripts/Create-BloodHoundOperatorSession.ps1)
-script, modify it so it matches the values of your
-installation and import it:
+Dot-Source (note the `.` in front of the command)
+`Create-BloodHoundOperatorSession.ps1` script to create a new
+BloodHoundOperator session and make it available in your current PowerShell:
 
 ```powershell
-Import-Module /opt/Create-BloodHoundOperatorSession.ps1
+. ./scripts/Create-BloodHoundOperatorSession.ps1 -Password 'YourP@ssw0rd'
 ```
 
-After creating the session, execute the import script to import the queries:
+Optional parameters:
+
+- `-Username`: Username (default: `admin`)
+- `-Hostname`: Hostname / IP address of the BloodHound API (default: `127.0.0.1`)
+- `-Port`: Port of the BloodHound API (default: `8080`)
+
+Execute the `Import-BloodHoundCECustomQueries.ps1` script to import the custom
+queries:
 
 ```powershell
-cd scripts
-.\Import-BloodHoundCECustomQueries.ps1
+./scripts/Import-BloodHoundCECustomQueries.ps1
 ```
 
 The imported queries are then shown in BloodHound:
@@ -82,10 +76,22 @@ collected data.
 
 ### Usage
 
-1. Authenticate to the BloodHound API as explained above. 
-2. Directly copy the [BloodHound Operator Custom
-   Queries](custom_queries/BloodHound_Operator_Custom_Queries.md) from your
-   browser into your PowerShell console.
+Load the `BloodHoundOperator` module:
+
+```powershell
+Import-Module /opt/BloodHoundOperator/BloodHoundOperator.ps1
+```
+
+Dot-Source (note the `.` in front of the command)
+`Create-BloodHoundOperatorSession.ps1` script to create a new
+BloodHoundOperator session and make it available in your current PowerShell:
+
+```powershell
+. ./scripts/Create-BloodHoundOperatorSession.ps1 -Password 'YourP@ssw0rd'
+```
+
+Directly copy the [BloodHound Operator Custom Queries](custom_queries/BloodHound_Operator_Custom_Queries.md)
+from your browser into your PowerShell console.
 
 ## Useful Links
 

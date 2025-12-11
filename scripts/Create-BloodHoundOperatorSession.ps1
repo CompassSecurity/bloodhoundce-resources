@@ -22,15 +22,15 @@ $body = @{
     secret       = $Password
 } | ConvertTo-Json
 
-$response = Invoke-WebRequest `
+$response = Invoke-RestMethod `
     -Uri "http://$Hostname`:$Port/api/v2/login" `
     -Method POST `
     -Body $body `
     -ContentType "application/json"
 
-$token = ($response.Content | ConvertFrom-Json).data.session_token
+$token = $response.data.session_token
+#$token = ($response.Content | ConvertFrom-Json).data.session_token
 
-Write-Host "[*] Loading BloodHoundOperator module..." -ForeGroundColor Green
 Import-Module /opt/BloodHoundOperator/BloodHoundOperator.ps1
 
 Write-Host "[*] Logging in..." -ForeGroundColor Green

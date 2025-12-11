@@ -52,11 +52,14 @@ BloodHoundOperator session and make it available in your current PowerShell:
 . ./scripts/Create-BloodHoundOperatorSession.ps1 -Password 'YourP@ssw0rd'
 ```
 
-Optional parameters:
+Parameters:
 
-- `-Username`: Username (default: `admin`)
-- `-Hostname`: Hostname / IP address of the BloodHound API (default: `127.0.0.1`)
-- `-Port`: Port of the BloodHound API (default: `8080`)
+- `-Password`: Password (mandatory, if you don't specify it on the commandline,
+  you will be prompted)
+- `-Username`: Username (optional, default: `admin`)
+- `-Hostname`: Hostname / IP address of the BloodHound API (optional, default:
+  `127.0.0.1`)
+- `-Port`: Port of the BloodHound API (optional, default: `8080`)
 
 Execute the `Import-BloodHoundCECustomQueries.ps1` script to import the custom
 queries:
@@ -76,21 +79,10 @@ collected data.
 
 ### Usage
 
-Load the `BloodHoundOperator` module:
+Load the `BloodHoundOperator` module and dot-source the
+`Create-BloodHoundOperatorSession.ps1` script as explained above.
 
-```powershell
-Import-Module /opt/BloodHoundOperator/BloodHoundOperator.ps1
-```
-
-Dot-Source (note the `.` in front of the command)
-`Create-BloodHoundOperatorSession.ps1` script to create a new
-BloodHoundOperator session and make it available in your current PowerShell:
-
-```powershell
-. ./scripts/Create-BloodHoundOperatorSession.ps1 -Password 'YourP@ssw0rd'
-```
-
-Directly copy the [BloodHound Operator Custom Queries](custom_queries/BloodHound_Operator_Custom_Queries.md)
+Then directly copy the [BloodHound Operator Custom Queries](custom_queries/BloodHound_Operator_Custom_Queries.md)
 from your browser into your PowerShell console.
 
 ## Useful Links

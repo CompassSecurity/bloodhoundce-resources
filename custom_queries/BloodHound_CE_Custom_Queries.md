@@ -427,7 +427,7 @@ WITH "alice" AS samaccountname
 UNWIND ['Computer', 'User'] AS type
 MATCH p = allShortestPaths((b1:Base)-[:AD_ATTACK_PATHS*1..]->(b2:Base))
 WHERE b1 <> b2
-  AND toLower(u.samaccountname) = toLower(samaccountname)
+  AND toLower(b1.samaccountname) = toLower(samaccountname)
   AND (type IN LABELS(u))
 RETURN p
 LIMIT 1000
@@ -439,7 +439,7 @@ LIMIT 1000
 WITH "alice" AS samaccountname
 MATCH p = allShortestPaths((b1:Base)-[:AD_ATTACK_PATHS*1..]->(b2:Tag_Tier_Zero))
 WHERE b1 <> b2
-  AND toLower(u.samaccountname) = toLower(samaccountname)
+  AND toLower(b1.samaccountname) = toLower(samaccountname)
 RETURN p
 LIMIT 1000
 ```

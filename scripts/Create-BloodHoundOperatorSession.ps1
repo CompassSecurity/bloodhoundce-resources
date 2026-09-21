@@ -21,7 +21,7 @@ if (Get-Module BloodHoundOperator){
   Write-Host "[*] BloodHoundOperator module is loaded." -ForeGroundColor Green
 }
 else {
-  Write-Error "[*] BloodHoundOperator module is not loaded. Please load module first." -ForeGroundColor Red
+  Write-Error "[*] BloodHoundOperator module is not loaded. Please load module first."
   exit 1
 }
 

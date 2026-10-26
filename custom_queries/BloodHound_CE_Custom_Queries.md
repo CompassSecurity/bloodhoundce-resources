@@ -610,6 +610,17 @@ RETURN p
 LIMIT 1000
 ```
 
+### Linked GPO to the OUs with their Objects (Adjust GPO Name)
+
+```cypher
+UNWIND ["wsus"] AS word
+MATCH p1 = (g:GPO)-[:GPLink]->(o:Base)
+WHERE toLower(g.name) CONTAINS toLower(word)
+OPTIONAL MATCH p2 = (o)-[:Contains*1..]->(:Base)
+RETURN p1, p2
+LIMIT 1000
+```
+
 ### GPO Permissions of Non-Tier 0 Principals
 
 ```cypher
